@@ -1,4 +1,7 @@
-
 node_modules
+dist
+.next
+.turbo
+coverage
+*.tsbuildinfo
 .gitignore.swp
-
