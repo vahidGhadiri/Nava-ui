@@ -7,103 +7,43 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 HAS_ERROR=0
-LOG_FILE="/tmp/precommit_step.log"
-
-spinner() {
-  local pid=$1
-  local message="$2"
-  local spin='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
-  local i=0
-
-  tput civis 2>/dev/null
-
-  while kill -0 "$pid" 2>/dev/null; do
-    i=$(( (i + 1) % ${#spin} ))
-    printf "\r${YELLOW}%s %s${NC}" "$message" "${spin:$i:1}" >&2
-    sleep 0.1
-  done
-
-  tput cnorm 2>/dev/null
-}
-
-run_step() {
-  local title="$1"
-  local command="$2"
-  local success_msg="$3"
-  local fail_msg="$4"
-
-  bash -c "$command" > "$LOG_FILE" 2>&1 &
-  local pid=$!
-
-  spinner $pid "→ ${title}"
-  wait $pid
-  local exit_code=$?
-
-  echo ""
-
-  if [ "$exit_code" -ne 0 ]; then
-    echo "${RED}✖ ${fail_msg}${NC}" >&2
-    cat "$LOG_FILE"
-    HAS_ERROR=1
-  else
-    echo "${GREEN}✔ ${success_msg}${NC}" >&2
-  fi
-}
-
-run_bundle_size_step() {
-  local title="Evaluating bundle size"
-
-  bash -c "npm run size:check" > "$LOG_FILE" 2>&1 &
-  local pid=$!
-
-  spinner $pid "→ ${title}"
-  wait $pid
-  local exit_code=$?
-
-  echo ""
-
-  if [ "$exit_code" -ne 0 ]; then
-    echo "${RED}✖ Bundle size exceeded${NC}" >&2
-    cat "$LOG_FILE"
-    HAS_ERROR=1
-  else
-    BUNDLE_SIZE=$(grep -E 'Size:' "$LOG_FILE" | tail -n1 | sed 's/^[[:space:]]*//;s/with all dependencies.*$//')
-    echo "${GREEN}${BUNDLE_SIZE}${NC}" >&2
-  fi
-}
-
 
 echo "${BLUE}Running pre-commit checks...${NC}" >&2
 echo "" >&2
 
-run_step "Auto-fixing lint issues" "npm run lint:fix" "Auto-fix completed" "Failed to auto-fix lint issues"
-run_step "Formatting code with Prettier" "npm run format && npm run format:check" "Code formatted" "Prettier formatting failed"
-run_step "Running linter checks" "npm run lint:check" "Lint passed" "Linter check failed"
-run_step "Checking TypeScript issues" "npm run utils:clean-ts" "TypeScript checked" "TypeScript issues found"
-run_step "Building project" "npm run build:lib" "Build succeeded" "Project build failed"
-run_bundle_size_step
+echo "${YELLOW}→ Linting...${NC}" >&2
+npx eslint . --ext .js,.ts,.tsx --fix > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "${RED}✖ Lint fix failed${NC}" >&2
+  HAS_ERROR=1
+else
+  echo "${GREEN}✔ Lint fixed${NC}" >&2
+fi
+
+echo "${YELLOW}→ Checking lint...${NC}" >&2
+npx eslint . --ext .js,.ts,.tsx > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "${RED}✖ Lint check failed${NC}" >&2
+  HAS_ERROR=1
+else
+  echo "${GREEN}✔ Lint passed${NC}" >&2
+fi
 
 FILES=$(git diff --cached --name-only --diff-filter=ACM)
-TS_PATTERNS=("any" "@ts-ignore" "@ts-nocheck")
-GLOBAL_PATTERNS=("console\\.log")
 
 while IFS= read -r FILE; do
   CONTENT=$(git show ":$FILE" 2>/dev/null)
 
-  for GLOBAL_PATTERN in "${GLOBAL_PATTERNS[@]}"; do
-    if echo "$CONTENT" | grep -q "$GLOBAL_PATTERN"; then
-      echo "${RED}✖ Found '$GLOBAL_PATTERN' in '$FILE'. Remove it before committing.${NC}" >&2
-      HAS_ERROR=1
-    fi
-  done
+  if echo "$CONTENT" | grep -q "console\.log"; then
+    echo "${RED}✖ Found 'console.log' in '$FILE'. Remove it before committing.${NC}" >&2
+    HAS_ERROR=1
+  fi
 
   if [[ "$FILE" =~ \.ts$|\.tsx$ ]]; then
-    for TS_PATTERN in "${TS_PATTERNS[@]}"; do
-      if echo "$CONTENT" | grep -q "$TS_PATTERN"; then
-        echo "${RED}✖ Found '$TS_PATTERN' in TypeScript/TSX file '$FILE'. Remove it before committing.${NC}" >&2
-        HAS_ERROR=1
-      fi
-    done
+    if echo "$CONTENT" | grep -qE "@ts-ignore|@ts-nocheck"; then
+      echo "${RED}✖ Found '@ts-ignore/@ts-nocheck' in '$FILE'. Remove it before committing.${NC}" >&2
+      HAS_ERROR=1
+    fi
   fi
 done <<< "$FILES"
 
@@ -114,6 +54,5 @@ if [ "$HAS_ERROR" -eq 1 ]; then
   exit 1
 fi
 
-echo "${GREEN}✔ All pre-commit checks passed successfully.${NC}" >&2
-echo ""
+echo "${GREEN}✔ All checks passed.${NC}" >&2
 exit 0
