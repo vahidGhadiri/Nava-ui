@@ -152,7 +152,6 @@ export default [
 
   {
     files: [
-      "src/configs/tailwind/**/*.js",
       "**/*.webpack.{js,cjs}",
       "**/*.config.{js,cjs}",
       "tailwind.config.js",
