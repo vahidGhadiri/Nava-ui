@@ -41,6 +41,9 @@ importers:
       tsdown:
         specifier: ^0.22.8
         version: 0.22.8(typescript@5.9.3)
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
       typescript:
         specifier: ^5.8.0
         version: 5.9.3
@@ -4228,8 +4231,7 @@ snapshots:
       - oxc-resolver
       - vue-tsc
 
-  tslib@2.8.1:
-    optional: true
+  tslib@2.8.1: {}
 
   tsscmp@1.0.6: {}
 
