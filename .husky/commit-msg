@@ -1,0 +1,28 @@
+#!/bin/bash
+
+COMMIT_MSG_FILE="$1"
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+PATTERN="^(feat|deliverable|fix|chore|refactor|docs|test|perf|style|build)\([a-zA-Z0-9._/-]+\): [A-Z].+"
+
+RED='\033[0;31m'
+NC='\033[0m'
+
+if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
+  echo -e "${RED}****** ERROR: Commit message does not follow the required format ******${NC}"
+  echo ""
+  echo "** Expected format:"
+  echo "   <type>(<scope>): <description>"
+  echo ""
+  echo "** Where:"
+  echo "   - type        = feat | fix | chore | refactor | docs | test | perf | style | build"
+  echo "   - scope       = path or module name (e.g., hooks)"
+  echo "   - description = a meaningful, descriptive commit summary starting with a capital letter"
+  echo ""
+  echo "** Example:"
+  echo "   feat(hooks): Add use-format to isolate strings across modules"
+  echo ""
+  exit 1
+fi
+
+exit 0
