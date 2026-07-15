@@ -1,0 +1,25 @@
+{
+  "include": ["src", "global.d.ts"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "module": "nodenext",
+    "lib": ["dom", "esnext"],
+    "importHelpers": true,
+    "declaration": true,
+    "sourceMap": true,
+    "rootDir": "./src",
+    "strict": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "moduleResolution": "nodenext",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "typeRoots": ["node_modules/@types", "src/types"]
+  }
+}
