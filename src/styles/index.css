@@ -1,0 +1,57 @@
+@import "tailwindcss";
+@import "./colors.css";
+@import "./spacing.css";
+@import "./border-radius.css";
+@import "./typography.css";
+@import "./shadows.css";
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-family: var(--font-family-sans);
+    line-height: var(--line-height-normal);
+    color: var(--color-content-primary);
+    background-color: var(--color-surface-primary);
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+}
