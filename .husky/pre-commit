@@ -43,9 +43,11 @@ FILES=$(git diff --cached --name-only --diff-filter=ACM)
 while IFS= read -r FILE; do
   CONTENT=$(git show ":$FILE" 2>/dev/null)
 
-  if echo "$CONTENT" | grep -q "console\.log" && [[ "$FILE" != ".husky/"* ]]; then
-    echo "${RED}✖ Found 'console.log' in '$FILE'. Remove it before committing.${NC}" >&2
-    HAS_ERROR=1
+  if [[ "$FILE" =~ \.(ts|tsx|js|jsx|mjs|cjs)$ ]]; then
+    if echo "$CONTENT" | grep -q "console\.log"; then
+      echo "${RED}✖ Found 'console.log' in '$FILE'. Remove it before committing.${NC}" >&2
+      HAS_ERROR=1
+    fi
   fi
 
   if [[ "$FILE" =~ \.ts$|\.tsx$ ]]; then

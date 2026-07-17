@@ -1,0 +1,222 @@
+name: CI/CD
+
+on:
+    pull_request:
+        branches:
+            - develop
+            - stage
+            - main
+        paths:
+            - "apps/**"
+            - "turbo.json"
+            - "tsconfig.json"
+            - "pnpm-workspace.yaml"
+            - "pnpm-lock.yaml"
+            - ".github/workflows/ci.yml"
+
+    push:
+        branches:
+            - main
+        paths:
+            - "apps/**"
+            - "turbo.json"
+            - "tsconfig.json"
+            - "pnpm-workspace.yaml"
+            - "pnpm-lock.yaml"
+            - ".github/workflows/ci.yml"
+
+concurrency:
+    group: ci-${{ github.event.pull_request.base.ref || github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    verify:
+        name: Verify
+
+        if: github.event_name == 'pull_request'
+
+        runs-on: ubuntu-latest
+
+        environment:
+            name: ${{ github.base_ref == 'main' && 'PRODUCTION' || github.base_ref == 'stage' && 'STAGING' || 'DEV' }}
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Lint
+              run: pnpm lint
+
+            - name: Typecheck
+              run: pnpm typecheck
+
+            - name: Build
+              run: pnpm build
+
+    docker-check:
+        name: Docker Build Validation
+
+        needs: verify
+
+        if: |
+            github.event_name == 'pull_request' &&
+            (
+              (
+                github.base_ref == 'stage' &&
+                startsWith(github.head_ref, 'release/stage')
+              )
+              ||
+              (
+                github.base_ref == 'main' &&
+                startsWith(github.head_ref, 'release/prod')
+              )
+            )
+
+        runs-on: ubuntu-latest
+
+        environment:
+            name: ${{ github.base_ref == 'main' && 'PRODUCTION' || 'STAGING' }}
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Build Docker Image
+              uses: docker/build-push-action@v6
+
+              with:
+                  context: .
+                  file: docker/Dockerfile
+
+                  push: false
+
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+
+    publish:
+        name: Publish packages to npm
+
+        if: |
+            github.event_name == 'push' &&
+            github.ref_name == 'main'
+
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write
+            pull-requests: write
+            id-token: write
+
+        environment:
+            name: PRODUCTION
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+                  registry-url: https://registry.npmjs.org
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build packages
+              run: pnpm build
+
+            - name: Create Release PR or Publish
+              uses: changesets/action@v1
+
+              with:
+                  title: "chore: version packages"
+                  commit: "chore: version packages"
+                  version: pnpm changeset version
+                  publish: pnpm release
+
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    docker-publish:
+        name: Push Docker Image to GHCR
+
+        needs: publish
+
+        if: |
+            github.event_name == 'push' &&
+            github.ref_name == 'main'
+
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            packages: write
+
+        environment:
+            name: PRODUCTION
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Login to GHCR
+              uses: docker/login-action@v3
+
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Extract Metadata
+              id: meta
+              uses: docker/metadata-action@v5
+
+              with:
+                  images: ghcr.io/${{ github.repository_owner }}/nava-ui
+
+                  tags: |
+                      type=raw,value=latest
+                      type=sha
+
+            - name: Build and Push Docker Image
+              uses: docker/build-push-action@v6
+
+              with:
+                  context: .
+                  file: docker/Dockerfile
+
+                  push: true
+
+                  tags: ${{ steps.meta.outputs.tags }}
+
+                  labels: ${{ steps.meta.outputs.labels }}
+
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
