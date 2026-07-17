@@ -12,7 +12,7 @@ echo "${BLUE}Running pre-commit checks...${NC}" >&2
 echo "" >&2
 
 echo "${YELLOW}→ Linting...${NC}" >&2
-npx eslint . --ext .js,.ts,.tsx --fix > /dev/null 2>&1
+pnpm lint:fix > /dev/null 2>&1
 if [ $? -ne 0 ]; then
   echo "${RED}✖ Lint fix failed${NC}" >&2
   HAS_ERROR=1
@@ -21,7 +21,7 @@ else
 fi
 
 echo "${YELLOW}→ Checking lint...${NC}" >&2
-npx eslint . --ext .js,.ts,.tsx > /dev/null 2>&1
+pnpm lint:check > /dev/null 2>&1
 if [ $? -ne 0 ]; then
   echo "${RED}✖ Lint check failed${NC}" >&2
   HAS_ERROR=1
@@ -29,12 +29,21 @@ else
   echo "${GREEN}✔ Lint passed${NC}" >&2
 fi
 
+echo "${YELLOW}→ Formatting...${NC}" >&2
+pnpm format > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "${RED}✖ Format failed${NC}" >&2
+  HAS_ERROR=1
+else
+  echo "${GREEN}✔ Formatted${NC}" >&2
+fi
+
 FILES=$(git diff --cached --name-only --diff-filter=ACM)
 
 while IFS= read -r FILE; do
   CONTENT=$(git show ":$FILE" 2>/dev/null)
 
-  if echo "$CONTENT" | grep -q "console\.log"; then
+  if echo "$CONTENT" | grep -q "console\.log" && [[ "$FILE" != ".husky/"* ]]; then
     echo "${RED}✖ Found 'console.log' in '$FILE'. Remove it before committing.${NC}" >&2
     HAS_ERROR=1
   fi
