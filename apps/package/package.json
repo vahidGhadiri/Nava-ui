@@ -32,6 +32,7 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
   },
   "peerDependencies": {
