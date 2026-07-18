@@ -13,7 +13,8 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx,md,json,css}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build && changeset publish"
+    "release": "turbo run build && changeset publish",
+    "storybook": "pnpm --filter nava-ui storybook"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
