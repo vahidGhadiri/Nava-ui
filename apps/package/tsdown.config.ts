@@ -2,8 +2,8 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
   entry: {
-    button: "src/components/_abstractions/abstracted-button/index.tsx",
-    index: "src/components/_abstractions/index.ts",
+    button: "src/components/button/index.tsx",
+    index: "src/components/index.ts",
   },
   external: ["react", "react-dom", "nava-icon"],
   format: ["esm", "cjs"],
