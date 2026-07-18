@@ -1,33 +1,69 @@
-import type { ButtonHTMLAttributes, ReactNode, FC } from "react";
+import composeClassNames from "@utils";
+import { forwardRef } from "react";
 
-interface AbstractedButtonSlots {
-  content?: string;
-  loading?: string;
-  root?: string;
-}
-export interface AbstractedButtonProps extends Omit<
-  ButtonHTMLAttributes<HTMLButtonElement>,
-  "children" | "disabled"
-> {
-  loadingBehavior?: "overlay" | "replace" | "prepend" | "append";
-  keepContentVisibleWhileLoading?: boolean;
-  spinnerPlacement?: "start" | "end";
-  slots?: AbstractedButtonSlots;
-  disableWhenLoading?: boolean;
-  loadingElement?: ReactNode;
-  loadingDelay?: number;
-  children?: ReactNode;
-  isDisabled?: boolean;
-  loadingText?: string;
-  isLoading?: boolean;
-  asChild?: boolean;
-}
-const AbstractedButton: FC<AbstractedButtonProps> = ({ title }) => {
-  return (
-    <div>
-      <div>{title}</div>
-    </div>
-  );
-};
+import type { AbstractedButtonProps } from "./button.types";
+
+import { LoadingIndicator } from "./components/loading-indicator";
+import { LoadingContent } from "./components/loading-content";
+import { useButton } from "./hooks/use-button";
+
+const AbstractedButton = forwardRef<HTMLButtonElement, AbstractedButtonProps>(
+  (
+    {
+      loadingPlacement = "prepend",
+      disableWhenLoading = false,
+      isDisabled = false,
+      isLoading = false,
+      loadingDelay = 0,
+      loadingElement,
+      loadingText,
+      children,
+      slots,
+      ...rest
+    },
+    ref,
+  ) => {
+    const { shouldShowLoading, buttonProps } = useButton({
+      disableWhenLoading,
+      loadingDelay,
+      isDisabled,
+      isLoading,
+      ...rest,
+    });
+
+    const indicator = shouldShowLoading ? (
+      <LoadingIndicator
+        loadingElement={loadingElement}
+        className={slots?.loading}
+        loadingText={loadingText}
+      />
+    ) : null;
+
+    const content = shouldShowLoading ? (
+      <LoadingContent
+        contentClassName={slots?.content}
+        placement={loadingPlacement}
+        indicator={indicator}
+      >
+        {children}
+      </LoadingContent>
+    ) : (
+      <span className={slots?.content}>{children}</span>
+    );
+
+    return (
+      <button
+        style={loadingPlacement === "overlay" ? { position: "relative" } : undefined}
+        className={composeClassNames([slots?.root])}
+        ref={ref}
+        {...buttonProps}
+      >
+        {content}
+      </button>
+    );
+  },
+);
+
+AbstractedButton.displayName = "AbstractedButton";
 
 export default AbstractedButton;
