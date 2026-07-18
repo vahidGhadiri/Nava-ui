@@ -18,6 +18,9 @@
     "lint": {
       "outputs": ["node_modules/.cache/.eslintcache"]
     },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
     "clean": {
       "cache": false
     }
