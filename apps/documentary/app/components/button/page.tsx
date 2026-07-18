@@ -5,6 +5,19 @@ import Link from "next/link";
 
 import { DemoBlock } from "../../../components/demo-block";
 
+function Spinner() {
+  return (
+    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+      <circle className="opacity-25" stroke="currentColor" strokeWidth="4" cx="12" cy="12" r="10" />
+      <path
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+        className="opacity-75"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 function CopyButton({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -24,23 +37,80 @@ function CopyButton({ code }: { code: string }) {
   );
 }
 
-function Spinner() {
+function SaveIcon() {
   return (
-    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-      <circle className="opacity-25" stroke="currentColor" strokeWidth="4" cx="12" cy="12" r="10" />
-      <path
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-        className="opacity-75"
-        fill="currentColor"
-      />
+    <svg
+      strokeLinejoin="round"
+      stroke="currentColor"
+      strokeLinecap="round"
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      strokeWidth="2"
+      fill="none"
+    >
+      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+      <polyline points="17,21 17,13 7,13 7,21" />
+      <polyline points="7,3 7,8 15,8" />
     </svg>
   );
 }
 
+function SearchIcon() {
+  return (
+    <svg
+      strokeLinejoin="round"
+      stroke="currentColor"
+      strokeLinecap="round"
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      strokeWidth="2"
+      fill="none"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <line x2="16.65" y2="16.65" x1="21" y1="21" />
+    </svg>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg
+      strokeLinejoin="round"
+      stroke="currentColor"
+      strokeLinecap="round"
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      strokeWidth="2"
+      fill="none"
+    >
+      <line x1="12" x2="12" y2="19" y1="5" />
+      <line y1="12" x2="19" y2="12" x1="5" />
+    </svg>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg
+      strokeLinejoin="round"
+      stroke="currentColor"
+      strokeLinecap="round"
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      strokeWidth="2"
+      fill="none"
+    >
+      <polyline points="3,6 5,6 21,6" />
+      <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+    </svg>
+  );
+}
+
+const importCode = 'import { Button } from "nava-ui"';
+
 export default function ButtonDocs() {
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
-  const [loading3, setLoading3] = useState(false);
 
   const simulateLoading = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     setter(true);
@@ -83,24 +153,10 @@ export default function ButtonDocs() {
           <div className="glass-card flex items-center gap-2 rounded-lg px-3 py-1.5">
             <span className="text-[12px] text-surface-400">Import:</span>
             <code className="font-mono text-[13px] font-medium text-surface-700 dark:text-surface-200">
-              {'import { AbstractedButton } from "nava-ui"'}
+              {importCode}
             </code>
-            <CopyButton code={'import { AbstractedButton } from "nava-ui"'} />
+            <CopyButton code={importCode} />
           </div>
-        </div>
-
-        <div className="mt-4 flex items-center gap-3 text-[12px]">
-          <a
-            className="flex items-center gap-1 text-surface-400 transition-colors hover:text-surface-600 dark:hover:text-surface-300"
-            href="https://github.com/whydrf/nava-ui"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" height="14" width="14">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-            </svg>
-            GitHub
-          </a>
         </div>
       </div>
 
@@ -109,49 +165,8 @@ export default function ButtonDocs() {
         <h2 className="mb-3 text-xl font-bold tracking-[-0.01em]">When To Use</h2>
         <p className="mb-4 text-[14px] leading-relaxed text-surface-500 dark:text-surface-400">
           A button means an operation (or a series of operations). Clicking a button will trigger
-          its corresponding business logic.
+          its corresponding business logic. Use React composition for icons and rich content.
         </p>
-        <p className="mb-2 text-[14px] font-medium text-surface-700 dark:text-surface-300">
-          In Nava UI we provide 4 loading placements:
-        </p>
-        <ul className="flex flex-col gap-2 text-[14px] text-surface-500 dark:text-surface-400">
-          <li className="flex items-start gap-2">
-            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-500" />
-            <span>
-              <strong className="font-medium text-surface-700 dark:text-surface-200">
-                prepend
-              </strong>
-              {" — Loading indicator appears before the button text."}
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-500" />
-            <span>
-              <strong className="font-medium text-surface-700 dark:text-surface-200">append</strong>
-              {" — Loading indicator appears after the button text."}
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-500" />
-            <span>
-              <strong className="font-medium text-surface-700 dark:text-surface-200">
-                overlay
-              </strong>
-              {" — Loading indicator overlays on top of the button content."}
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-500" />
-            <span>
-              <strong className="font-medium text-surface-700 dark:text-surface-200">
-                replace
-              </strong>
-              {
-                " — Button text is replaced with loading text, fully accessible via visually hidden content."
-              }
-            </span>
-          </li>
-        </ul>
       </section>
 
       {/* Examples */}
@@ -161,130 +176,161 @@ export default function ButtonDocs() {
         <div className="flex flex-col gap-12">
           {/* Basic */}
           <DemoBlock
-            code={`import AbstractedButton from "nava-ui/button";
+            code={`import { Button } from "nava-ui";
 
-<AbstractedButton>Default</AbstractedButton>
-<AbstractedButton isDisabled>Disabled</AbstractedButton>`}
-            description="The most basic button with default styling."
+<Button>Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="danger">Danger</Button>
+<Button variant="naked">Naked</Button>`}
+            description="5 visual variants for different emphasis levels."
             title="Basic"
           >
-            <button className="rounded-xl bg-primary-500 px-4 py-2 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20 transition-all hover:bg-primary-600">
-              Default
+            <button className="inline-flex h-10 min-w-[96px] items-center justify-center rounded-xl bg-primary-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20 transition-all hover:bg-primary-600">
+              Primary
             </button>
-            <button className="rounded-xl border border-surface-200 bg-white px-4 py-2 text-[13px] font-medium text-surface-700 transition-all hover:bg-surface-50 dark:border-surface-700 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700">
+            <button className="inline-flex h-10 min-w-[96px] items-center justify-center rounded-xl border border-surface-200 bg-white px-4 text-[13px] font-medium text-surface-700 transition-all hover:bg-surface-50 dark:border-surface-700 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700">
               Secondary
             </button>
-            <button className="rounded-xl bg-surface-900 px-4 py-2 text-[13px] font-medium text-white transition-all hover:bg-surface-800 dark:bg-surface-100 dark:text-surface-900 dark:hover:bg-surface-200">
-              Dark
+            <button className="inline-flex h-10 min-w-[96px] items-center justify-center rounded-xl bg-transparent px-4 text-[13px] font-medium text-surface-600 transition-all hover:bg-surface-100 dark:text-surface-400 dark:hover:bg-surface-800">
+              Ghost
+            </button>
+            <button className="inline-flex h-10 min-w-[96px] items-center justify-center rounded-xl bg-red-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-red-500/20 transition-all hover:bg-red-600">
+              Danger
+            </button>
+            <button className="inline-flex h-10 min-w-[96px] items-center justify-center rounded-xl bg-transparent px-4 text-[13px] font-medium text-primary-500 transition-all hover:bg-primary-50 dark:hover:bg-primary-950">
+              Naked
+            </button>
+          </DemoBlock>
+
+          {/* With Icons */}
+          <DemoBlock
+            code={`import { Button } from "nava-ui";
+
+<Button>
+  <SaveIcon />
+  Save
+</Button>
+
+<Button variant="secondary">
+  <SearchIcon />
+  Search
+</Button>
+
+<Button variant="danger">
+  <TrashIcon />
+  Delete
+</Button>`}
+            description="Use React composition to add icons alongside text."
+            title="With Icons"
+          >
+            <button className="inline-flex h-10 min-w-[96px] items-center justify-center gap-2 rounded-xl bg-primary-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20 transition-all hover:bg-primary-600">
+              <SaveIcon />
+              Save
+            </button>
+            <button className="inline-flex h-10 min-w-[96px] items-center justify-center gap-2 rounded-xl border border-surface-200 bg-white px-4 text-[13px] font-medium text-surface-700 transition-all hover:bg-surface-50 dark:border-surface-700 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700">
+              <SearchIcon />
+              Search
+            </button>
+            <button className="inline-flex h-10 min-w-[96px] items-center justify-center gap-2 rounded-xl bg-red-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-red-500/20 transition-all hover:bg-red-600">
+              <TrashIcon />
+              Delete
             </button>
           </DemoBlock>
 
           {/* Loading */}
           <DemoBlock
-            code={`import AbstractedButton from "nava-ui/button";
+            code={`import { Button } from "nava-ui";
 
-<AbstractedButton isLoading>Click me</AbstractedButton>
+<Button loading={loading1} onClick={() => setLoading1(true)}>
+  {loading1 ? "Saving..." : "Save"}
+</Button>
 
-<AbstractedButton isLoading loadingDelay={300}>
-  Delayed Loading
-</AbstractedButton>`}
-            description="A loading indicator can be added to a button by setting the isLoading property. Use loadingDelay to avoid flash for fast requests."
+<Button loading={loading2} loadingPosition="center" onClick={() => setLoading2(true)}>
+  {loading2 ? "Processing..." : "Process"}
+</Button>`}
+            description="Set loading to show a spinner. Use loadingPosition to control placement: start (default), end, or center (overlay)."
             title="Loading"
           >
             <button
-              className="relative flex items-center gap-2 rounded-xl bg-primary-500 px-4 py-2 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20 transition-all hover:bg-primary-600"
+              className="relative inline-flex h-10 min-w-[96px] items-center justify-center gap-2 rounded-xl bg-primary-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20 transition-all hover:bg-primary-600"
               onClick={() => simulateLoading(setLoading1)}
             >
               {loading1 && <Spinner />}
-              {loading1 ? "Saving..." : "Click to Load"}
+              {loading1 ? "Saving..." : "Save"}
             </button>
             <button
-              className="relative flex items-center gap-2 rounded-xl border border-surface-200 bg-white px-4 py-2 text-[13px] font-medium text-surface-700 transition-all hover:bg-surface-50 dark:border-surface-700 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700"
+              className="relative inline-flex h-10 min-w-[96px] items-center justify-center gap-2 rounded-xl border border-surface-200 bg-white px-4 text-[13px] font-medium text-surface-700 transition-all hover:bg-surface-50 dark:border-surface-700 dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-surface-700"
               onClick={() => simulateLoading(setLoading2)}
             >
               {loading2 && <Spinner />}
-              {loading2 ? "Processing..." : "Click to Load"}
+              {loading2 ? "Processing..." : "Process"}
             </button>
           </DemoBlock>
 
-          {/* Loading Placement */}
+          {/* Loading Position */}
           <DemoBlock
-            code={`import AbstractedButton from "nava-ui/button";
+            code={`import { Button } from "nava-ui";
 
-<AbstractedButton isLoading loadingPlacement="prepend">
-  Prepend
-</AbstractedButton>
+<Button loading loadingPosition="start">
+  Saving...
+</Button>
 
-<AbstractedButton isLoading loadingPlacement="append">
-  Append
-</AbstractedButton>
+<Button loading loadingPosition="end">
+  Saving...
+</Button>
 
-<AbstractedButton isLoading loadingPlacement="overlay">
-  Overlay
-</AbstractedButton>
-
-<AbstractedButton
-  isLoading
-  loadingPlacement="replace"
-  loadingText="Saving..."
->
-  Save Changes
-</AbstractedButton>`}
-            description="Control where the loading indicator appears using loadingPlacement."
-            title="Loading Placement"
+<Button loading loadingPosition="center">
+  Saving...
+</Button>`}
+            description="Control where the loading indicator appears with loadingPosition."
+            title="Loading Position"
           >
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-surface-400">prepend</span>
-              <button className="relative flex items-center gap-2 rounded-xl bg-primary-500 px-4 py-2 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20">
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] text-surface-400">start</span>
+              <button className="inline-flex h-10 min-w-[96px] items-center justify-center gap-2 rounded-xl bg-primary-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20">
                 <Spinner />
-                Prepend
+                Saving...
               </button>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-surface-400">append</span>
-              <button className="relative flex items-center gap-2 rounded-xl bg-primary-500 px-4 py-2 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20">
-                Append
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] text-surface-400">end</span>
+              <button className="inline-flex h-10 min-w-[96px] items-center justify-center gap-2 rounded-xl bg-primary-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20">
+                Saving...
                 <Spinner />
               </button>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-surface-400">overlay</span>
-              <button className="relative overflow-hidden rounded-xl bg-primary-500 px-4 py-2 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20">
-                <span className="opacity-40">Overlay</span>
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] text-surface-400">center</span>
+              <button className="relative inline-flex h-10 min-w-[96px] items-center justify-center overflow-hidden rounded-xl bg-primary-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20">
+                <span className="opacity-40">Saving...</span>
                 <span className="absolute inset-0 flex items-center justify-center">
                   <Spinner />
                 </span>
-              </button>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-surface-400">replace</span>
-              <button className="relative flex items-center gap-2 rounded-xl bg-primary-500 px-4 py-2 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20">
-                <Spinner />
-                Saving...
               </button>
             </div>
           </DemoBlock>
 
           {/* Disabled */}
           <DemoBlock
-            code={`import AbstractedButton from "nava-ui/button";
+            code={`import { Button } from "nava-ui";
 
-<AbstractedButton isDisabled>Disabled</AbstractedButton>
+<Button disabled>Disabled</Button>
 
-<AbstractedButton isDisabled isLoading>
+<Button disabled loading>
   Disabled Loading
-</AbstractedButton>`}
-            description="To mark a button as disabled, add the isDisabled property. The button will also be disabled during loading unless disableWhenLoading is set to false."
+</Button>`}
+            description="Standard disabled state. Also automatically disabled while loading unless disableWhenLoading is false."
             title="Disabled"
           >
             <button
-              className="cursor-not-allowed rounded-xl bg-primary-500 px-4 py-2 text-[13px] font-medium text-white opacity-50"
+              className="inline-flex h-10 min-w-[96px] cursor-not-allowed items-center justify-center rounded-xl bg-primary-500 px-4 text-[13px] font-medium text-white opacity-50"
               disabled
             >
               Disabled
             </button>
             <button
-              className="relative flex cursor-not-allowed items-center gap-2 rounded-xl border border-surface-200 bg-white px-4 py-2 text-[13px] font-medium text-surface-400 opacity-50 dark:border-surface-700 dark:bg-surface-800"
+              className="inline-flex h-10 min-w-[96px] cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-surface-200 bg-white px-4 text-[13px] font-medium text-surface-400 opacity-50 dark:border-surface-700 dark:bg-surface-800"
               disabled
             >
               <Spinner />
@@ -294,67 +340,62 @@ export default function ButtonDocs() {
 
           {/* Sizes */}
           <DemoBlock
-            code={`import AbstractedButton from "nava-ui/button";
+            code={`import { Button } from "nava-ui";
 
-<AbstractedButton size="small">Small</AbstractedButton>
-<AbstractedButton>Medium</AbstractedButton>
-<AbstractedButton size="large">Large</AbstractedButton>`}
-            description="Buttons come in 3 sizes: small, medium (default), and large."
+<Button size="small">Small</Button>
+<Button>Medium</Button>
+<Button size="large">Large</Button>`}
+            description="3 sizes: small, medium (default), and large."
             title="Sizes"
           >
-            <button className="rounded-lg bg-primary-500 px-3 py-1.5 text-[12px] font-medium text-white shadow-sm shadow-primary-500/20">
+            <button className="inline-flex h-8 min-w-[88px] items-center justify-center rounded-lg bg-primary-500 px-3 text-[12px] font-medium text-white shadow-sm shadow-primary-500/20">
               Small
             </button>
-            <button className="rounded-xl bg-primary-500 px-4 py-2 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20">
+            <button className="inline-flex h-10 min-w-[96px] items-center justify-center rounded-xl bg-primary-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20">
               Medium
             </button>
-            <button className="rounded-xl bg-primary-500 px-5 py-2.5 text-[14px] font-medium text-white shadow-sm shadow-primary-500/20">
+            <button className="inline-flex h-12 min-w-[130px] items-center justify-center rounded-xl bg-primary-500 px-5 text-[14px] font-semibold text-white shadow-sm shadow-primary-500/20">
               Large
             </button>
           </DemoBlock>
 
-          {/* Loading Delay */}
+          {/* Circle */}
           <DemoBlock
-            code={`import AbstractedButton from "nava-ui/button";
+            code={`import { Button } from "nava-ui";
 
-<AbstractedButton isLoading loadingDelay={300}>
-  Fast Request
-</AbstractedButton>
+<Button shape="circle">
+  <SearchIcon />
+</Button>
 
-<AbstractedButton isLoading loadingDelay={500}>
-  Slow Request
-</AbstractedButton>`}
-            description="Use loadingDelay to prevent a loading spinner from flashing for fast operations (e.g. 300ms)."
-            title="Loading Delay"
+<Button shape="circle" size="large">
+  <PlusIcon />
+</Button>`}
+            description="Circle buttons for icon-only actions."
+            title="Circle"
           >
-            <button
-              className="relative flex items-center gap-2 rounded-xl bg-primary-500 px-4 py-2 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20 transition-all hover:bg-primary-600"
-              onClick={() => simulateLoading(setLoading3)}
-            >
-              {loading3 ? <Spinner /> : null}
-              {loading3 ? "Done!" : "Click me (300ms delay)"}
+            <button className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-white shadow-sm shadow-primary-500/20 transition-all hover:bg-primary-600">
+              <SearchIcon />
             </button>
-            <span className="text-[12px] text-surface-400">Spinner appears only after 300ms</span>
+            <button className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-500 text-white shadow-sm shadow-primary-500/20 transition-all hover:bg-primary-600">
+              <PlusIcon />
+            </button>
+            <button className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-sm shadow-red-500/20 transition-all hover:bg-red-600">
+              <TrashIcon />
+            </button>
           </DemoBlock>
 
-          {/* Slots */}
+          {/* Full Width */}
           <DemoBlock
-            code={`import AbstractedButton from "nava-ui/button";
+            code={`import { Button } from "nava-ui";
 
-<AbstractedButton
-  slots={{
-    root: "my-custom-root",
-    content: "my-custom-content",
-    loading: "my-custom-loading",
-  }}
->
-  Custom Styled
-</AbstractedButton>`}
-            description="Use the slots prop to apply custom class names to different parts of the button."
-            title="Custom Slots"
+<Button fullWidth>
+  Full Width Button
+</Button>`}
+            description="Use fullWidth to make the button span the full width of its container."
+            title="Full Width"
           >
-            <button className="rounded-xl border-2 border-dashed border-primary-300 bg-primary-50 px-4 py-2 text-[13px] font-medium text-primary-700 transition-all hover:bg-primary-100 dark:border-primary-700 dark:bg-primary-950 dark:text-primary-300">
-              Custom Styled
+            <button className="inline-flex h-10 w-full items-center justify-center rounded-xl bg-primary-500 px-4 text-[13px] font-medium text-white shadow-sm shadow-primary-500/20 transition-all hover:bg-primary-600">
+              Full Width Button
             </button>
           </DemoBlock>
         </div>
@@ -364,12 +405,7 @@ export default function ButtonDocs() {
       <section>
         <h2 className="mb-3 text-xl font-bold tracking-[-0.01em]">API</h2>
         <p className="mb-6 text-[14px] text-surface-500 dark:text-surface-400">
-          Different button styles can be generated by setting Button properties. The recommended
-          order is: <code className="text-[13px]">isLoading</code>
-          {" → "}
-          <code className="text-[13px]">loadingPlacement</code>
-          {" → "}
-          <code className="text-[13px]">isDisabled</code>.
+          Button accepts all native HTML button attributes plus the following:
         </p>
 
         <div className="glass-card overflow-hidden rounded-2xl">
@@ -394,15 +430,36 @@ export default function ButtonDocs() {
               <tbody className="text-surface-600 dark:text-surface-300">
                 <tr className="border-b border-surface-100 dark:border-surface-800">
                   <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
-                    isLoading
+                    variant
                   </td>
-                  <td className="px-4 py-3">Show loading state</td>
-                  <td className="px-4 py-3">boolean</td>
-                  <td className="px-4 py-3">false</td>
+                  <td className="px-4 py-3">Visual style</td>
+                  <td className="px-4 py-3">
+                    &quot;primary&quot; | &quot;secondary&quot; | &quot;ghost&quot; |
+                    &quot;danger&quot; | &quot;naked&quot;
+                  </td>
+                  <td className="px-4 py-3">&quot;primary&quot;</td>
                 </tr>
                 <tr className="border-b border-surface-100 dark:border-surface-800">
                   <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
-                    isDisabled
+                    size
+                  </td>
+                  <td className="px-4 py-3">Button size</td>
+                  <td className="px-4 py-3">
+                    &quot;small&quot; | &quot;medium&quot; | &quot;large&quot;
+                  </td>
+                  <td className="px-4 py-3">&quot;medium&quot;</td>
+                </tr>
+                <tr className="border-b border-surface-100 dark:border-surface-800">
+                  <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
+                    shape
+                  </td>
+                  <td className="px-4 py-3">Button shape</td>
+                  <td className="px-4 py-3">&quot;pill&quot; | &quot;circle&quot;</td>
+                  <td className="px-4 py-3">&quot;pill&quot;</td>
+                </tr>
+                <tr className="border-b border-surface-100 dark:border-surface-800">
+                  <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
+                    disabled
                   </td>
                   <td className="px-4 py-3">Disable the button</td>
                   <td className="px-4 py-3">boolean</td>
@@ -410,55 +467,44 @@ export default function ButtonDocs() {
                 </tr>
                 <tr className="border-b border-surface-100 dark:border-surface-800">
                   <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
-                    loadingPlacement
+                    loading
+                  </td>
+                  <td className="px-4 py-3">Show loading state</td>
+                  <td className="px-4 py-3">boolean</td>
+                  <td className="px-4 py-3">false</td>
+                </tr>
+                <tr className="border-b border-surface-100 dark:border-surface-800">
+                  <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
+                    loadingPosition
                   </td>
                   <td className="px-4 py-3">Where to show the loading indicator</td>
                   <td className="px-4 py-3">
-                    &quot;prepend&quot; | &quot;append&quot; | &quot;overlay&quot; |
-                    &quot;replace&quot;
+                    &quot;start&quot; | &quot;end&quot; | &quot;center&quot;
                   </td>
-                  <td className="px-4 py-3">&quot;prepend&quot;</td>
+                  <td className="px-4 py-3">&quot;start&quot;</td>
                 </tr>
                 <tr className="border-b border-surface-100 dark:border-surface-800">
                   <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
-                    loadingDelay
+                    fullWidth
                   </td>
-                  <td className="px-4 py-3">Delay in ms before showing loading state</td>
-                  <td className="px-4 py-3">number</td>
-                  <td className="px-4 py-3">0</td>
+                  <td className="px-4 py-3">Make button span full width</td>
+                  <td className="px-4 py-3">boolean</td>
+                  <td className="px-4 py-3">false</td>
                 </tr>
                 <tr className="border-b border-surface-100 dark:border-surface-800">
                   <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
-                    loadingText
+                    rootClassName
                   </td>
-                  <td className="px-4 py-3">
-                    Text shown during loading with &quot;replace&quot; placement
-                  </td>
+                  <td className="px-4 py-3">Custom class for the root element</td>
                   <td className="px-4 py-3">string</td>
                   <td className="px-4 py-3">-</td>
                 </tr>
-                <tr className="border-b border-surface-100 dark:border-surface-800">
-                  <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
-                    loadingElement
-                  </td>
-                  <td className="px-4 py-3">Custom loading indicator element</td>
-                  <td className="px-4 py-3">ReactNode</td>
-                  <td className="px-4 py-3">-</td>
-                </tr>
-                <tr className="border-b border-surface-100 dark:border-surface-800">
-                  <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
-                    disableWhenLoading
-                  </td>
-                  <td className="px-4 py-3">Disable button while loading</td>
-                  <td className="px-4 py-3">boolean</td>
-                  <td className="px-4 py-3">true</td>
-                </tr>
                 <tr>
                   <td className="px-4 py-3 font-medium text-surface-700 dark:text-surface-200">
-                    slots
+                    children
                   </td>
-                  <td className="px-4 py-3">Custom class names for root, content, and loading</td>
-                  <td className="px-4 py-3">{"{ root?, content?, loading? }"}</td>
+                  <td className="px-4 py-3">Button content (text, icons, etc.)</td>
+                  <td className="px-4 py-3">ReactNode</td>
                   <td className="px-4 py-3">-</td>
                 </tr>
               </tbody>
@@ -467,7 +513,7 @@ export default function ButtonDocs() {
         </div>
 
         <p className="mt-4 text-[13px] text-surface-400">
-          It accepts all props which native buttons support.
+          Also accepts all native HTML button attributes (onClick, type, aria-*, etc.).
         </p>
       </section>
 
@@ -483,32 +529,30 @@ export default function ButtonDocs() {
             <p className="text-[14px] leading-relaxed text-surface-500 dark:text-surface-400">
               The loading state is computed as{" "}
               <code className="text-[13px]">
-                shouldShowLoading = isLoading &amp;&amp; (loadingDelay &lt;= 0 || delayElapsed)
+                shouldShowLoading = loading &amp;&amp; (loadingDelay &lt;= 0 || delayElapsed)
               </code>
               . During SSR, <code className="text-[13px]">delayElapsed</code> is always false, so
-              the spinner will never render on the server. This ensures identical first renders
-              between server and client with zero hydration mismatch.
+              the spinner never renders on the server. This ensures zero hydration mismatch.
             </p>
           </div>
 
           <div>
             <h3 className="mb-2 text-[15px] font-semibold text-surface-900 dark:text-white">
-              What does disableWhenLoading do?
+              Can I use custom loading indicators?
             </h3>
             <p className="text-[14px] leading-relaxed text-surface-500 dark:text-surface-400">
-              By default, the button is automatically disabled while loading to prevent multiple
-              submissions. Set <code className="text-[13px]">disableWhenLoading=false</code> if you
-              want the button to remain clickable during loading.
+              Yes. Pass a custom element via the <code className="text-[13px]">loadingElement</code>{" "}
+              prop to override the default spinner.
             </p>
           </div>
 
           <div>
             <h3 className="mb-2 text-[15px] font-semibold text-surface-900 dark:text-white">
-              Can I use my own loading icon?
+              How do I add icons to a pill button?
             </h3>
             <p className="text-[14px] leading-relaxed text-surface-500 dark:text-surface-400">
-              Yes. Pass a custom ReactNode to <code className="text-[13px]">loadingElement</code> to
-              replace the default spinner.
+              Use React composition. Place icon elements directly inside the Button as children —
+              the built-in gap utility handles spacing automatically.
             </p>
           </div>
         </div>
